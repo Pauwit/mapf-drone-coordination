@@ -83,3 +83,16 @@ def test_all_drones_reach_goal():
     assert sol.status in ("optimal", "feasible")
     for d in drones:
         assert sol.paths[d.id][-1] == d.goal
+
+def test_3d_solver_avoids_building():
+    g = Grid(rows=6, cols=6, alts=3)
+    g.add_building(row=3, col=3, height=2)  # blocks (3,3,0) and (3,3,1)
+    drones = [
+        Drone(id=0, start=(0, 0, 0), goal=(5, 5, 0)),
+        Drone(id=1, start=(5, 0, 0), goal=(0, 5, 0)),
+    ]
+    sol = MAPFSolver(g, drones, time_limit_s=30).solve()
+    assert sol.status in ("optimal", "feasible")
+    for path in sol.paths.values():
+        for pos in path:
+            assert pos not in g.obstacles, f"Path through obstacle: {pos}"
