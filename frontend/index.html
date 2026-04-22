@@ -60,6 +60,18 @@ async function load() {
 
 function cellSize() { return Math.min(canvas.width, canvas.height) / 10; }
 
+function drawStar(x, y, r) {
+  const pts = 5, inner = r * 0.45;
+  ctx.beginPath();
+  for (let i = 0; i < pts * 2; i++) {
+    const angle = (i * Math.PI) / pts - Math.PI / 2;
+    const rad = i % 2 === 0 ? r : inner;
+    i === 0 ? ctx.moveTo(x + Math.cos(angle)*rad, y + Math.sin(angle)*rad)
+            : ctx.lineTo(x + Math.cos(angle)*rad, y + Math.sin(angle)*rad);
+  }
+  ctx.closePath();
+}
+
 function draw(t) {
   if (!solution) return;
   const cs = cellSize();
@@ -77,14 +89,37 @@ function draw(t) {
     ctx.beginPath(); ctx.moveTo(off + c*cs, off); ctx.lineTo(off + c*cs, off + rows*cs); ctx.stroke();
   }
 
+  // Start markers (hollow circle) and goal markers (filled star)
+  PAYLOAD.drones.forEach((d, i) => {
+    const col = COLORS[i % COLORS.length];
+    const sx = off + d.start[1] * cs + cs/2, sy = off + d.start[0] * cs + cs/2;
+    const gx = off + d.goal[1]  * cs + cs/2, gy = off + d.goal[0]  * cs + cs/2;
+
+    ctx.beginPath();
+    ctx.arc(sx, sy, cs * 0.32, 0, Math.PI * 2);
+    ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.globalAlpha = 0.45; ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    drawStar(gx, gy, cs * 0.32);
+    ctx.fillStyle = col; ctx.globalAlpha = 0.55; ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+
+  // Drone spheres + index label
   Object.entries(solution.paths).forEach(([id, path], i) => {
     const pos = path[Math.min(t, path.length - 1)];
     const x = off + pos[1] * cs + cs/2;
     const y = off + pos[0] * cs + cs/2;
     ctx.beginPath();
-    ctx.arc(x, y, cs * 0.3, 0, Math.PI * 2);
+    ctx.arc(x, y, cs * 0.28, 0, Math.PI * 2);
     ctx.fillStyle = COLORS[i % COLORS.length];
     ctx.fill();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold ${Math.round(cs * 0.28)}px system-ui`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(id, x, y);
   });
 }
 
