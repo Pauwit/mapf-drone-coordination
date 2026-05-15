@@ -32,18 +32,22 @@ export class CityScene {
     this.scene.add(fill);
   }
 
-  _addGround(size = 80) {
+  _addGround(rows = 8, cols = 8) {
+    const cx = cols / 2;
+    const cz = rows / 2;
+
+    // Ground: one unit of margin around the map on each side
     const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(size, size),
+      new THREE.PlaneGeometry(cols + 1, rows + 1),
       new THREE.MeshPhongMaterial({ color: 0x304a62 })
     );
     ground.rotation.x = -Math.PI / 2;
-    ground.position.set(size / 4, -0.01, size / 4);
+    ground.position.set(cx, -0.01, cz);
     this.scene.add(ground);
 
-    // Lighter grid lines stand out against the dark ground
-    const grid = new THREE.GridHelper(size, size / 2, 0x7090aa, 0x608098);
-    grid.position.set(size / 4, 0, size / 4);
+    // Grid: one division per cell — intersections land on integer coords 0..cols, 0..rows
+    const grid = new THREE.GridHelper(cols, cols, 0x7090aa, 0x608098);
+    grid.position.set(cx, 0, cz);
     this.scene.add(grid);
   }
 
