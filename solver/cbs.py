@@ -236,7 +236,8 @@ class ECBSSolver:
 
             # Suppression paresseuse — retire les entrées supprimées du sommet
             while open_list and open_list[0][1] in deleted_ids:
-                heapq.heappop(open_list)
+                _, nid, _ = heapq.heappop(open_list)
+                deleted_ids.discard(nid)
             if not open_list:
                 break
 
