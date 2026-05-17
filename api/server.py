@@ -29,9 +29,6 @@ def create_app() -> Flask:
         for b in body.get("buildings", []):
             grid.add_building(b["row"], b["col"], b["height"])
 
-        for nf in body.get("nofly", []):
-            grid.add_nofly_box(tuple(nf["min"]), tuple(nf["max"]))
-
         drones = [
             Drone(
                 id=d["id"],

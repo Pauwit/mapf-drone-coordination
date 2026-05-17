@@ -24,9 +24,11 @@ def test_2d_neighbors_skip_obstacle():
     nbrs = g.neighbors((0, 0))
     assert (0, 1) not in nbrs
 
-def test_2d_nofly_excludes_positions():
+def test_2d_obstacle_excludes_positions():
     g = Grid(rows=4, cols=4)
-    g.add_nofly_box((1, 1), (2, 2))
+    for r in range(1, 3):
+        for c in range(1, 3):
+            g.obstacles.add((r, c))
     for r in range(1, 3):
         for c in range(1, 3):
             assert (r, c) not in g.positions

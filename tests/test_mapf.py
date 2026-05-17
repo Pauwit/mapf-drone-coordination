@@ -63,14 +63,12 @@ def test_makespan_is_optimal_single():
     sol = MAPFSolver(g, drones).solve()
     assert sol.makespan == 3
 
-def test_nofly_zone_respected():
+def test_grid_has_no_nofly_field():
     g = Grid(rows=4, cols=4)
-    g.add_nofly_box((0, 1), (0, 1))
-    drones = [Drone(id=0, start=(0, 0), goal=(0, 2))]
-    sol = MAPFSolver(g, drones).solve()
-    assert sol.status in ("optimal", "feasible")
-    for pos in sol.paths[0]:
-        assert pos != (0, 1)
+    g.add_building(1, 1, 1)
+    assert hasattr(g, 'obstacles')
+    assert not hasattr(g, '_nofly')
+    assert (1, 1) in g.obstacles
 
 def test_all_drones_reach_goal():
     g = Grid(rows=5, cols=5)
