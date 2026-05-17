@@ -52,3 +52,9 @@ def test_add_building():
     for a in range(3):
         assert (2, 2, a) in g.obstacles
     assert (2, 2, 3) not in g.obstacles
+
+def test_add_building_2d():
+    g = Grid(rows=4, cols=4)          # alts=1 par défaut
+    g.add_building(row=1, col=2, height=1)
+    assert (1, 2) not in g.positions
+    assert len(g.positions) == 15     # 16 - 1 obstacle

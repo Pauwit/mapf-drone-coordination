@@ -55,8 +55,11 @@ class Grid:
         ]
 
     def add_building(self, row: int, col: int, height: int) -> None:
-        for a in range(height):
-            self.obstacles.add((row, col, a))
+        if self.alts == 1:
+            self.obstacles.add((row, col))
+        else:
+            for a in range(height):
+                self.obstacles.add((row, col, a))
 
     def add_nofly_box(self, min_pos: Pos, max_pos: Pos) -> None:
         if len(min_pos) == 2:
