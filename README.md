@@ -67,7 +67,7 @@ pip install -r requirements.txt
 ### Backend (API Flask)
 
 ```bash
-python api/server.py
+python -m api.server
 # → http://localhost:5050
 ```
 
@@ -80,9 +80,12 @@ Endpoints disponibles :
 Dans un second terminal (le backend doit tourner en parallèle) :
 
 ```bash
-python frontend/serve.py
+cd frontend
+python serve.py
 # → http://localhost:8080
 ```
+
+> **Important** : lancer depuis le dossier `frontend/` — `SimpleHTTPRequestHandler` sert le répertoire courant, donc `python3 -m frontend.serve` depuis la racine afficherait l'arborescence du projet au lieu de `index.html`.
 
 Ouvrir `http://localhost:8080` dans le navigateur.
 
